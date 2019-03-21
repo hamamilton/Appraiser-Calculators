@@ -1,139 +1,197 @@
-//import './formik-demo.css';
-import React from 'react';
-import { render } from 'react-dom';
-import { withFormik } from 'formik';
-import * as Yup from 'yup';
+import React, { Component } from "react";
+//import "./App.css";
 
-import Select from 'react-select';
-import 'react-select/dist/react-select.css';
-
-const formikEnhancer = withFormik({
-  validationSchema: Yup.object().shape({
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required!'),
-    topics: Yup.array()
-      .min(3, 'Pick at least 3 tags')
-      .of(
-        Yup.object().shape({
-          label: Yup.string().required(),
-          value: Yup.string().required(),
-        })
-      ),
-  }),
-  mapPropsToValues: props => ({
-    email: '',
-    topics: [],
-  }),
-  handleSubmit: (values, { setSubmitting }) => {
-    const payload = {
-      ...values,
-      topics: values.topics.map(t => t.value),
+class GLAInputForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fullname: "",
+      emailaddress: "",
+      password: "",
+      qualityRating: "",
+      message: "",
+      terms: false,
+      test: ""
     };
-    setTimeout(() => {
-      alert(JSON.stringify(payload, null, 2));
-      setSubmitting(false);
-    }, 1000);
-  },
-  displayName: 'MyForm',
-});
 
-const MyForm = props => {
-  const {
-    values,
-    touched,
-    dirty,
-    errors,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-    setFieldValue,
-    setFieldTouched,
-    isSubmitting,
-  } = props;
-  return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="email" style={{ display: 'block' }}>
-        Email
-      </label>
-      <input
-        id="email"
-        placeholder="Enter your email"
-        type="email"
-        value={values.email}
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
-      {errors.email &&
-        touched.email && (
-          <div style={{ color: 'red', marginTop: '.5rem' }}>{errors.email}</div>
-        )}
-      <MySelect
-        value={values.topics}
-        onChange={setFieldValue}
-        onBlur={setFieldTouched}
-        error={errors.topics}
-        touched={touched.topics}
-      />
-      <button
-        type="button"
-        className="outline"
-        onClick={handleReset}
-        disabled={!dirty || isSubmitting}
-      >
-        Reset
-      </button>
-      <button type="submit" disabled={isSubmitting}>
-        Submit
-      </button>
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-      <DisplayFormikState {...props} />
-    </form>
-  );
-};
+  handleChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
 
-const options = [
-  { value: 'Food', label: 'Food' },
-  { value: 'Being Fabulous', label: 'Being Fabulous' },
-  { value: 'Ken Wheeler', label: 'Ken Wheeler' },
-  { value: 'ReasonML', label: 'ReasonML' },
-  { value: 'Unicorns', label: 'Unicorns' },
-  { value: 'Kittens', label: 'Kittens' },
-];
+    this.setState({
+      [name]: value
+    });
+  }
 
-class MySelect extends React.Component {
-  handleChange = value => {
-    // this is going to call setFieldValue and manually update values.topcis
-    this.props.onChange('topics', value);
-  };
-
-  handleBlur = () => {
-    // this is going to call setFieldTouched and manually update touched.topcis
-    this.props.onBlur('topics', true);
-  };
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log(this.state);
+  }
 
   render() {
     return (
-      <div style={{ margin: '1rem 0' }}>
-        <label htmlFor="color">Topics (select at least 3) </label>
-        <Select
-          id="color"
-          options={options}
-          multi={true}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-          value={this.props.value}
-        />
-        {!!this.props.error &&
-          this.props.touched && (
-            <div style={{ color: 'red', marginTop: '.5rem' }}>{this.props.error}</div>
-          )}
+      <div className="App">
+        <header>
+          <div className="container">
+            <nav className="navbar">
+              <div className="navbar-brand">
+                <span className="navbar-item">Forms in React</span>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div className="container">
+          <div className="columns">
+            <div className="column is-9">
+              <form className="form" onSubmit={this.handleSubmit}>
+                <div className="field">
+                  <label className="label">Name</label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      name="fullname"
+                      value={this.state.fullname}
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="field">
+                  <label className="label">Email Address</label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="email"
+                      name="emailaddress"
+                      value={this.state.emailaddress}
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="field">
+                  <label className="label">Password</label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="password"
+                      name="password"
+                      value={this.state.password}
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="field">
+                  <label className="label">Quality Rating</label>
+                  <div className="control">
+                    <div className="select">
+                      <select
+                        value={this.state.qualityRating}
+                        name="qualityRating"
+                        onChange={this.handleChange}
+                      >
+                        <option value="Q1">Q1</option>
+                        <option value="Q2">Q2</option>
+                        <option value="Q3">Q3</option>
+                        <option value="Q4">Q4</option>
+                        <option value="Q5">Q5</option>
+                        <option value="Q6">Q6</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="field">
+                  <label className="label">What do you like about React</label>
+                  <div className="control">
+                    <textarea
+                      className="textarea"
+                      name="message"
+                      value={this.state.message}
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="field">
+                  <div className="control">
+                    <label className="checkbox">
+                      <input
+                        name="terms"
+                        type="checkbox"
+                        checked={this.state.terms}
+                        onChange={this.handleChange}
+                      />
+                      I agree to the{" "}
+                      <a href="https://google.com">terms and conditions</a>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="field">
+                  <div className="control">
+                    <label className="label">
+                      Do you test your React code?
+                    </label>
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        name="test"
+                        onChange={this.handleChange}
+                        value="Yes"
+                        checked={this.state.test === "Yes"}
+                      />
+                      Yes
+                    </label>
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        name="test"
+                        onChange={this.handleChange}
+                        value="No"
+                        checked={this.state.test === "No"}
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div className="field">
+                  <div className="control">
+                    <input
+                      type="submit"
+                      value="Submit"
+                      className="button is-primary"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div className="column is-3">
+              <pre>
+                <code>
+                  <p>Full Name: {this.state.fullname}</p>
+                  <p>Email Address: {this.state.emailaddress}</p>
+                  <p>Password: {this.state.password}</p>
+                  <p>Choice in Editor: {this.state.editor}</p>
+                  <p>Why React: {this.state.message}</p>
+                  <p>Terms and Condition: {this.state.terms}</p>
+                  <p>Do you test?: {this.state.test}</p>
+                </code>
+              </pre>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
-const MyEnhancedForm = formikEnhancer(MyForm);
-
-
+export default GLAInputForm;
