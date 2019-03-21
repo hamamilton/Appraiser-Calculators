@@ -22,8 +22,10 @@
     "react-native-maps": "0.23.0",
     "react-native-vector-icons": "6.4.2",
     "react-router-dom": "5.0.0",
-    "react-select": "^2.4.2",
+    "react-virtualized": "9.21.0",
+    "react-virtualized-select": "3.1.3",
     "styled-components": "4.1.3",
+    "react-select": "1.0.0-rc.5",
     "yup": "0.27.0"
   },
   "scripts": {
