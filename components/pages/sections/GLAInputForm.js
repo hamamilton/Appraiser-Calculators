@@ -1,197 +1,95 @@
-import React, { Component } from "react";
-//import "./App.css";
+import React from 'react';
+import { Formik } from 'formik';
+import Yup from 'yup';
+import VirtualizedSelect from 'react-virtualized-select';
 
-class GLAInputForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fullname: "",
-      emailaddress: "",
-      password: "",
-      qualityRating: "",
-      message: "",
-      terms: false,
-      test: ""
-    };
+import 'react-select/dist/react-select.css';
+import 'react-virtualized/styles.css';
+import 'react-virtualized-select/styles.css';
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+const imaginaryThings = [
+  { label: 'Thing 1', value: 1 },
+  { label: 'Thing 2', value: 2 },
+  { label: 'Thing 3', value: 3 },
+  { label: 'Thing 4', value: 4 },
+  { label: 'Thing 5', value: 5 },
+];
 
-  handleChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+const GLAInputForm = (props) => {
+  const {
+    values,
+    touched,
+    errors,
+    dirty,
+    isSubmitting,
+    handleChange,
+    setFieldValue,
+    handleBlur,
+    handleSubmit,
+    handleReset,
+  } = props;
 
-    this.setState({
-      [name]: value
-    });
-  }
+  const _handleSelect = (selectChoice) => {
+    setFieldValue('imaginaryThingId', selectChoice.value);
+  };
 
-  handleSubmit(event) {
-    event.preventDefault();
-    console.log(this.state);
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <header>
-          <div className="container">
-            <nav className="navbar">
-              <div className="navbar-brand">
-                <span className="navbar-item">Forms in React</span>
-              </div>
-            </nav>
-          </div>
-        </header>
-        <div className="container">
-          <div className="columns">
-            <div className="column is-9">
-              <form className="form" onSubmit={this.handleSubmit}>
-                <div className="field">
-                  <label className="label">Name</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="text"
-                      name="fullname"
-                      value={this.state.fullname}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <label className="label">Email Address</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="email"
-                      name="emailaddress"
-                      value={this.state.emailaddress}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <label className="label">Password</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="password"
-                      name="password"
-                      value={this.state.password}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <label className="label">Quality Rating</label>
-                  <div className="control">
-                    <div className="select">
-                      <select
-                        value={this.state.qualityRating}
-                        name="qualityRating"
-                        onChange={this.handleChange}
-                      >
-                        <option value="Q1">Q1</option>
-                        <option value="Q2">Q2</option>
-                        <option value="Q3">Q3</option>
-                        <option value="Q4">Q4</option>
-                        <option value="Q5">Q5</option>
-                        <option value="Q6">Q6</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="field">
-                  <label className="label">What do you like about React</label>
-                  <div className="control">
-                    <textarea
-                      className="textarea"
-                      name="message"
-                      value={this.state.message}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <div className="control">
-                    <label className="checkbox">
-                      <input
-                        name="terms"
-                        type="checkbox"
-                        checked={this.state.terms}
-                        onChange={this.handleChange}
-                      />
-                      I agree to the{" "}
-                      <a href="https://google.com">terms and conditions</a>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="field">
-                  <div className="control">
-                    <label className="label">
-                      Do you test your React code?
-                    </label>
-                    <label className="radio">
-                      <input
-                        type="radio"
-                        name="test"
-                        onChange={this.handleChange}
-                        value="Yes"
-                        checked={this.state.test === "Yes"}
-                      />
-                      Yes
-                    </label>
-                    <label className="radio">
-                      <input
-                        type="radio"
-                        name="test"
-                        onChange={this.handleChange}
-                        value="No"
-                        checked={this.state.test === "No"}
-                      />
-                      No
-                    </label>
-                  </div>
-                </div>
-
-                <div className="field">
-                  <div className="control">
-                    <input
-                      type="submit"
-                      value="Submit"
-                      className="button is-primary"
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="column is-3">
-              <pre>
-                <code>
-                  <p>Full Name: {this.state.fullname}</p>
-                  <p>Email Address: {this.state.emailaddress}</p>
-                  <p>Password: {this.state.password}</p>
-                  <p>Choice in Editor: {this.state.editor}</p>
-                  <p>Why React: {this.state.message}</p>
-                  <p>Terms and Condition: {this.state.terms}</p>
-                  <p>Do you test?: {this.state.test}</p>
-                </code>
-              </pre>
-            </div>
-          </div>
-        </div>
+  return(
+    <form className="p-5" onSubmit={handleSubmit}>
+      <h1>Hello this is form!</h1>
+      <div className="form-group">
+        <label>Imaginary Email</label>
+        <input name="email" type="text" 
+          className={`form-control ${errors.email && touched.email && 'is-invalid'}`}
+          value={values.email} 
+          onChange={handleChange}
+          onBlur={handleBlur} />
+        {errors.email && touched.email && <div className="invalid-feedback">{errors.email}</div>}
       </div>
-    );
-  }
+      <div className="form-group">
+        <label>Imaginary Username</label>
+        <input name="username" type="text" 
+          className={`form-control ${errors.username && touched.username && 'is-invalid'}`}
+          value={values.username} 
+          onChange={handleChange}
+          onBlur={handleBlur} />
+        {errors.username && touched.username && <div className="invalid-feedback">{errors.username}</div>}
+      </div>
+      <div className="form-group">
+        <label>Imaginary Thing</label>
+        <VirtualizedSelect
+          name="imaginaryThingId"
+          value={values.imaginaryThingId}
+          options={imaginaryThings}
+          onChange={_handleSelect} />
+        <small className="form-text text-muted">
+          This is optional
+        </small>
+      </div>
+
+      <button type="submit" className="btn btn-outline-primary" disabled={isSubmitting}>
+        {isSubmitting ? 'WAIT PLIZ' : 'CLICK ME'}
+      </button>
+    </form>
+  );
 }
 
-export default GLAInputForm;
+export default Formik({
+  mapPropsToValues: (props) => ({ 
+    email: props.user.email,
+    username: props.user.username,
+    imaginaryThingId: props.user.imaginaryThingId,
+  }),
+
+  validationSchema: Yup.object().shape({
+    email: Yup.string().email('Invalid email address').required('Email is required!'),
+    username: Yup.string().required('This man needs a username'),
+  }),
+
+  handleSubmit: (values, { setSubmitting }) => {
+    setTimeout(() => {
+      // submit them do the server. do whatever you like!
+      alert(JSON.stringify(values, null, 2));
+      setSubmitting(false);
+    }, 1000);
+  },
+})(GLAInputForm);
