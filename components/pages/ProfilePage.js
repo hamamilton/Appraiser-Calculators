@@ -1,6 +1,6 @@
 import React from 'react'
 import { MDBCard, MDBCol, MDBRow, MDBView, MDBMask, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardFooter, MDBIcon, } from 'mdbreact';
-//import GLAInput from "./sections/GLAInputForm.js";
+import StepperExample from "./sections/GLAInputForm.js";
 import CalculationForm from "./sections/CalculationForm.js";
 import Comparables from "./sections/ComparablesSection.js";
 import { render } from "react-dom"
@@ -20,7 +20,7 @@ const ProfilePage = (props) => {
               <MDBCardTitle className="font-bold mb-3">
                     <strong>Subject Information</strong>
                   </MDBCardTitle>
-                //<GLAInput user={imaginaryUser} />
+                <StepperExample />
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
